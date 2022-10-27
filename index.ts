@@ -65,7 +65,7 @@ app.post('/api/genres', (req: Request, res: Response) => {
 app.put('/api/genres/:id', (req: Request, res: Response) => {
     let [result, genre] = isValidId(req.params.id);
 
-    if (!result) return res.status(400).send(`${req.params.id} is invalid`)
+    if (!result) return res.status(400).send(`${req.params.id} is an invalid id`)
 
     // if JSON body is invalid
     const { error } = validateBody(req.body);
@@ -74,6 +74,16 @@ app.put('/api/genres/:id', (req: Request, res: Response) => {
     }
 
     genre.name = req.body.name;
+    res.send(genre);
+})
+
+app.delete('/api/genres/:id', (req: Request, res: Response) => {
+    let [result, genre] = isValidId(req.params.id);
+    if (!result) return res.status(400).send(`${req.params.id} is an invalid id`)
+
+    let idxToRemove: number = genres.indexOf(genre);
+    genres.splice(idxToRemove, 1);
+
     res.send(genre);
 })
 
