@@ -51,6 +51,32 @@ app.post('/api/genres', (req: Request, res: Response) => {
     res.send(genre);
 })
 
+app.put('/api/genres/:id', (req: Request, res: Response) => {
+    const id = Number(req.params.id).valueOf();
+
+    // if `id` is not convertible to a number
+    if (!id) {
+        return res.status(400).send(`${req.params.id} is invalid`)
+    }
+
+    const genre = genres.find((el: genreType) => el.id === id)
+
+    // if the genre with the given id is not present in the DB
+    if (!genre) {
+        return res.status(404).send(`Genre with id: ${id} does not exist in DB`)
+    }
+
+    const { error } = validateBody(req.body);
+
+    // if JSON body is invalid
+    if (error) {
+        return res.send(400).send(error.details[0].message);
+    }
+
+    genre.name = req.body.name;
+    res.send(genre);
+})
+
 const PORT = Number(process.env.PORT).valueOf() || 3000;
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`)
