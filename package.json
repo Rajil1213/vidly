@@ -1,7 +1,7 @@
 {
   "name": "vidly",
   "version": "1.0.0",
-  "description": "A backend package for movies",
+  "description": "A backend package for renting movies",
   "main": "dist/index.js",
   "scripts": {
     "build": "npx tsc",
