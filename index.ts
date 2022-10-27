@@ -30,13 +30,24 @@ const validateBody = (body: {}): Joi.ValidationResult => {
     return schema.validate(body);
 }
 
+const isValidId = (val: any): [boolean, genreType] => {
+    const emptyGenre = {id: 0, name: ''};
+
+    let id = Number(val).valueOf();
+    if (!id) return [false, emptyGenre];
+
+    let genre = genres.find((el: genreType) => el.id === id);
+    if (!genre) return [false, emptyGenre];
+
+    return [true, genre];
+}
+
 app.get('/api/genres', (req: Request, res: Response) => {
     return res.send(genres);
 })
 
 app.post('/api/genres', (req: Request, res: Response) => {
     const { error } = validateBody(req.body);
-    console.log(error);
 
     if (error) {
         return res.status(400).send(error.details[0].message);
@@ -52,25 +63,14 @@ app.post('/api/genres', (req: Request, res: Response) => {
 })
 
 app.put('/api/genres/:id', (req: Request, res: Response) => {
-    const id = Number(req.params.id).valueOf();
+    let [result, genre] = isValidId(req.params.id);
 
-    // if `id` is not convertible to a number
-    if (!id) {
-        return res.status(400).send(`${req.params.id} is invalid`)
-    }
-
-    const genre = genres.find((el: genreType) => el.id === id)
-
-    // if the genre with the given id is not present in the DB
-    if (!genre) {
-        return res.status(404).send(`Genre with id: ${id} does not exist in DB`)
-    }
-
-    const { error } = validateBody(req.body);
+    if (!result) return res.status(400).send(`${req.params.id} is invalid`)
 
     // if JSON body is invalid
+    const { error } = validateBody(req.body);
     if (error) {
-        return res.send(400).send(error.details[0].message);
+        return res.status(400).send(error.details[0].message);
     }
 
     genre.name = req.body.name;
