@@ -1,6 +1,7 @@
 import express, {  Request, Response } from 'express';
 import { default as genres } from './routes/genres';
 import { default as customers } from './routes/customers';
+import { default as movies } from './routes/movies';
 
 const app: express.Application = express();
 
@@ -10,6 +11,7 @@ app.use(express.json());
 app.use('/api/genres', genres);
 // similarly,
 app.use('/api/customers', customers);
+app.use('/api/movies', movies);
 
 const PORT = Number(process.env.PORT).valueOf() || 3000;
 app.listen(PORT, () => {
