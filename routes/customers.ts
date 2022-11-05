@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
-import Joi from 'joi';
 import mongoose, { mongo } from 'mongoose';
+
+import { Customer as customerSchema, validateBody } from '../models/customer';
 
 const router: express.Router = express.Router();
 
@@ -9,34 +10,8 @@ mongoose.connect('mongodb://localhost/vidly')
     .then(() => console.log("Successfully connected to MongoDB"))
     .catch((err) => console.error("Could not connect to MongoDB...", err));
 
-const customerSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        minlength: 3,
-        required: true
-    },
-    isGold: {
-        type: Boolean,
-        default: false
-    },
-    phone: {
-        type: String,
-        required: true
-    }
-})
-
 // setup collection: Customer = db.customers
 const Customer = mongoose.model('customers', customerSchema);
-
-const validateBody = (body: {}): Joi.ValidationResult => {
-    const schema: Joi.ObjectSchema = Joi.object({
-        name: Joi.string().min(3).required(),
-        isGold: Joi.boolean().default(false),
-        phone: Joi.string().required()
-    });
-
-    return schema.validate(body);
-}
 
 router.get('/', async (req: Request, res: Response) => {
     const customers = await Customer.find().select({name: 1, isGold: 1, phone: 1}).sort({name: 1});

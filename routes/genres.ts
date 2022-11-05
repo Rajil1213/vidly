@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
-import Joi from 'joi';
 import mongoose, { mongo } from 'mongoose';
+
+import { Genre as genreSchema, validateBody } from '../models/genre';
 
 const router: express.Router = express.Router();
 
@@ -9,26 +10,10 @@ mongoose.connect('mongodb://localhost/vidly')
     .then(() => console.log("Successfully connected to MongoDB"))
     .catch((err) => console.error("Could not connect to MongoDB...", err));
 
-const genreSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        minlength :3,
-        required: true
-    }
-})
-
 // setup collection: Genre = db.genres
 const Genre = mongoose.model('genres', genreSchema);
 
 ///// TODO: sample list of genres, to be replaced with call to DB later...
-
-const validateBody = (body: {}): Joi.ValidationResult => {
-    const schema: Joi.ObjectSchema = Joi.object({
-        name: Joi.string().min(3).required()
-    });
-
-    return schema.validate(body);
-}
 
 router.get('/', async (req: Request, res: Response) => {
     const genres = await Genre.find().select({name: 1}).sort({name: 1});
