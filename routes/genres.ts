@@ -1,17 +1,8 @@
 import express, { Request, Response } from 'express';
-import mongoose, { mongo } from 'mongoose';
 
-import { Genre as genreSchema, validateBody } from '../models/genre';
+import { Genre, validateBody } from '../models/genre';
 
 const router: express.Router = express.Router();
-
-// setup db: use vidly
-mongoose.connect('mongodb://localhost/vidly')
-    .then(() => console.log("Successfully connected to MongoDB"))
-    .catch((err) => console.error("Could not connect to MongoDB...", err));
-
-// setup collection: Genre = db.genres
-const Genre = mongoose.model('genres', genreSchema);
 
 ///// TODO: sample list of genres, to be replaced with call to DB later...
 

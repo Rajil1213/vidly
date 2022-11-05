@@ -1,19 +1,10 @@
 import express, { Request, Response } from 'express';
 import mongoose, { mongo } from 'mongoose';
 
-import { Movie as movieSchema, validateBody } from '../models/movie';
-import { Genre as genreSchema } from '../models/genre';
+import { Movie, validateBody } from '../models/movie';
+import { Genre } from '../models/genre';
 
 const router: express.Router = express.Router();
-
-// setup db: use vidly
-mongoose.connect('mongodb://localhost/vidly')
-    .then(() => console.log("Successfully connected to MongoDB"))
-    .catch((err) => console.error("Could not connect to MongoDB...", err));
-
-// setup collection: Genre = db.genres
-const Movie = mongoose.model('movies', movieSchema);
-const Genre = mongoose.model('genres', genreSchema);
 
 router.get('/', async (req: Request, res: Response) => {
     const genres = await Movie.find().populate('genre').select({title: 1, genre: 1, numberInStock: 1, dailyRentalRate: 1}).sort({title: 1});
