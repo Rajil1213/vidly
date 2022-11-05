@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import mongoose from "mongoose";
 
-export const Genre = new mongoose.Schema({
+const genreSchema = new mongoose.Schema({
     name: {
         type: String,
         minlength :3,
@@ -16,3 +16,6 @@ export const validateBody = (body: {}): Joi.ValidationResult => {
 
     return schema.validate(body);
 }
+
+// setup collection: Genre = db.genres
+export const Genre = mongoose.model('genres', genreSchema);

@@ -13,11 +13,11 @@ interface customerInterface {
     genre: typeof HybridSchema;
 }
 
-export const Movie = new mongoose.Schema({
+const movieSchema = new mongoose.Schema({
     title: {
         type: String,
-        minlength: 2,
-        maxlength: 50,
+        minlength: 5,
+        maxlength: 255,
         required: true
     },
     numberInStock: {
@@ -30,7 +30,9 @@ export const Movie = new mongoose.Schema({
         default: function (this: customerInterface) {
             if (this.numberInStock > 0) return 0;
             return 100;
-        }
+        },
+        min: 0,
+        max: 255
     },
     genre: {
         type: HybridSchema,
@@ -49,3 +51,5 @@ export const validateBody = (body: {}): Joi.ValidationResult => {
 
     return schema.validate(body);
 }
+
+export const Movie = mongoose.model('movies', movieSchema);

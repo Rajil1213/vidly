@@ -1,10 +1,11 @@
 import Joi from 'joi';
 import mongoose from "mongoose";
 
-export const Customer = new mongoose.Schema({
+const customerSchema = new mongoose.Schema({
     name: {
         type: String,
-        minlength: 3,
+        minlength: 5,
+        maxlength: 50,
         required: true
     },
     isGold: {
@@ -13,7 +14,9 @@ export const Customer = new mongoose.Schema({
     },
     phone: {
         type: String,
-        required: true
+        required: true,
+        minlength: 5,
+        maxlength: 50
     }
 })
 
@@ -26,3 +29,5 @@ export const validateBody = (body: {}): Joi.ValidationResult => {
 
     return schema.validate(body);
 }
+
+export const Customer = mongoose.model('customers', customerSchema);
