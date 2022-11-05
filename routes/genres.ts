@@ -30,15 +30,6 @@ const validateBody = (body: {}): Joi.ValidationResult => {
     return schema.validate(body);
 }
 
-const isValidId = (id: any): boolean => {
-    const emptyGenre = {_id: 0, name: ''};
-
-    let genre = Genre.findOne({_id: id});
-    if (!genre) return false
-
-    return true;
-}
-
 router.get('/', async (req: Request, res: Response) => {
     const genres = await Genre.find().select({name: 1, _id: 0});
     return res.send(genres);
@@ -67,10 +58,6 @@ router.post('/', async (req: Request, res: Response) => {
 })
 
 router.put('/:id', async (req: Request, res: Response) => {
-    let result = isValidId(req.params.id);
-
-    if (!result) return res.status(400).send(`${req.params.id} is an invalid id`)
-
     // if JSON body is invalid
     const { error } = validateBody(req.body);
     if (error) {
@@ -78,19 +65,18 @@ router.put('/:id', async (req: Request, res: Response) => {
     }
 
     const name = req.body.name;
-    const dbResult = await Genre.findByIdAndUpdate(req.params.id, {
+    const result = await Genre.findByIdAndUpdate(req.params.id, {
         $set: { name: name}
-    })
-    res.send(dbResult);
+    }, {new: true})
+    if (!result) return res.status(400).send(`${req.params.id} is an invalid id`)
+    res.send(result);
 })
 
 router.delete('/:id', async (req: Request, res: Response) => {
-    let result = isValidId(req.params.id);
+    const result = await Genre.findByIdAndDelete(req.params.id);
     if (!result) return res.status(400).send(`${req.params.id} is an invalid id`)
 
-    const dbResult = await Genre.findByIdAndDelete(req.params.id);
-
-    res.send(dbResult);
+    res.send(result);
 })
 
 export default router;
