@@ -2,6 +2,8 @@ import express, {  Request, Response } from 'express';
 import { default as genres } from './routes/genres';
 import { default as customers } from './routes/customers';
 import { default as movies } from './routes/movies';
+import { default as rentals } from './routes/rentals';
+import mongoose from 'mongoose';
 
 const app: express.Application = express();
 
@@ -12,6 +14,12 @@ app.use('/api/genres', genres);
 // similarly,
 app.use('/api/customers', customers);
 app.use('/api/movies', movies);
+app.use('/api/rentals', rentals);
+
+// setup db: use vidly
+mongoose.connect('mongodb://localhost/vidly')
+    .then(() => console.log("Successfully connected to MongoDB"))
+    .catch((err) => console.error("Could not connect to MongoDB...", err));
 
 const PORT = Number(process.env.PORT).valueOf() || 3000;
 app.listen(PORT, () => {
