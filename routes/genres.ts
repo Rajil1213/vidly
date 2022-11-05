@@ -31,8 +31,14 @@ const validateBody = (body: {}): Joi.ValidationResult => {
 }
 
 router.get('/', async (req: Request, res: Response) => {
-    const genres = await Genre.find().select({name: 1, _id: 0});
+    const genres = await Genre.find().select({name: 1}).sort({name: 1});
     return res.send(genres);
+})
+
+router.get('/:id', async (req: Request, res: Response) => {
+    const genre = await Genre.findOne({_id: req.params.id}).select({name: 1});
+    if (!genre) return res.status(400).send(`${req.params.id} is an invalid id`)
+    return res.send(genre);
 })
 
 router.post('/', async (req: Request, res: Response) => {
