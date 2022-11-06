@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import mongoose, { ClientSession } from 'mongoose';
 
 import { Rental, validateBody } from '../models/rental';
 import { Customer } from '../models/customer';
@@ -45,17 +46,42 @@ router.post('/', async (req: Request, res: Response) => {
         // mongoose sets the remaining properties automatically
     })
 
+    let session: ClientSession | undefined;
     try {
         // the next two operations must be atomic
         // see: two-face commit or simulate a transaction
-        const result = await rental.save();
-        movie.numberInStock--;
-        movie.save()
-        res.send(result);
+        
+        // normal operation
+        // const result = await rental.save();
+        // movie.numberInStock--;
+        // movie.save()
+
+        // using mongoose transactions
+
+        // start a session 
+        session = await mongoose.startSession();
+        await session.withTransaction(async () => {
+            // task 1
+            const result = await rental.save();
+            // trigger an exception to test atomicity,
+            // this only works with mongodb in replicaSet (with multiple instances)
+            if (Math.random() > 0.5) {
+                throw new Error('something bad happened');
+            }
+            // task 2
+            movie.numberInStock--;
+            movie.save();
+            res.send(result);
+        })
     }
     catch (err: any) {
         res.send(err.message);
-
+    }
+    finally {
+        // end the session if one exists
+        if (session !== undefined) {
+            session.endSession();
+        }
     }
 })
 
