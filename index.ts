@@ -17,7 +17,9 @@ app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
 
 // setup db: use vidly
-mongoose.connect('mongodb://localhost/vidly')
+// for single-replicaSet, set `directConnection=true` to
+// force dispatch all operations to the host specified in the connection URI.
+mongoose.connect('mongodb://localhost:27017/vidly?directConnection=true')
     .then(() => console.log("Successfully connected to MongoDB"))
     .catch((err) => console.error("Could not connect to MongoDB...", err));
 
