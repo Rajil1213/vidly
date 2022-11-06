@@ -5,3 +5,5 @@ services:
     ports:
       - 27017:27017
     network_mode: bridge
+    # spawn with replica set for Transactions
+    command: mongod --bind_ip_all --replSet rs0
