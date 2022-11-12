@@ -1,6 +1,7 @@
-import Joi, { boolean } from 'joi';
-import mongoose, { mongo } from "mongoose";
+import Joi from 'joi';
+import mongoose from "mongoose";
 
+// for ObjectID validation
 import { joiObjectId } from 'ts-joi-objectid';
 const joi_oid = joiObjectId(Joi);
 
