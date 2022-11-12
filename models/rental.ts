@@ -1,6 +1,9 @@
 import Joi, { boolean } from 'joi';
 import mongoose, { mongo } from "mongoose";
 
+import { joiObjectId } from 'ts-joi-objectid';
+const joi_oid = joiObjectId(Joi);
+
 // define fields from the `Customer` and `Movie` schema that are required here
 const HybridCustomerSchema = new mongoose.Schema({
     name: {
@@ -62,8 +65,8 @@ const rentalSchema = new mongoose.Schema({
 
 export const validateBody = (body: {}): Joi.ValidationResult => {
     const schema: Joi.ObjectSchema = Joi.object({
-        customerId: Joi.string().required(),
-        movieId: Joi.string().required()
+        customerId: joi_oid().required(),
+        movieId: joi_oid().required()
     });
 
     return schema.validate(body);
