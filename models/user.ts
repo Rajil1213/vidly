@@ -1,8 +1,6 @@
 import Joi from 'joi';
 import mongoose from "mongoose";
-
-import { joiPass } from '../util/joi_pass'
-const joi_pass = joiPass(Joi)
+import passwordComplexity from 'joi-password-complexity';
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -26,7 +24,7 @@ export const validateBody = (body: {}): Joi.ValidationResult => {
     const schema: Joi.ObjectSchema = Joi.object({
         name: Joi.string().min(5).max(40).required(),
         email: Joi.string().email().required(),
-        password: joi_pass().required()
+        password: passwordComplexity().required()
     });
 
     return schema.validate(body);
