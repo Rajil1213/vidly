@@ -35,6 +35,7 @@
     "@types/mongoose": "^5.11.97",
     "express": "^4.18.2",
     "joi": "^17.6.4",
-    "mongoose": "^6.7.1"
+    "mongoose": "^6.7.1",
+    "ts-joi-objectid": "^1.0.1"
   }
 }
