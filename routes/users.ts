@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import _ from 'lodash';
 
 import { User, validateBody } from '../models/user';
 
@@ -16,19 +17,11 @@ router.post('/register', async (req: Request, res: Response) => {
 
     if (user) return res.status(400).send("User is already registered.");
 
-    const name = req.body.name;
-    const email = req.body.email;
-    const password = req.body.password;
-
-    user = new User({
-        name,
-        email,
-        password
-    })
+    user = new User(_.pick(req.body, ["name", "email", "password"]))
 
     try{
         await user.save();
-        res.send(user);
+        res.send(_.pick(user, ['_id', 'name', 'email']));
     }
     catch (err: any) {
         res.send(err.message);
