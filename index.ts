@@ -1,3 +1,4 @@
+import config from 'config';
 import express, {  Request, Response } from 'express';
 import { default as genres } from './routes/genres';
 import { default as customers } from './routes/customers';
@@ -8,6 +9,11 @@ import { default as auth } from './routes/auth';
 import mongoose from 'mongoose';
 
 const app: express.Application = express();
+
+if (!config.get('jwtPrivateKey')) {
+    console.error("FATAL ERROR: jwtPrivateKey is not defined.");
+    process.exit(1);
+}
 
 // get POST body (middleware); req.body = undefined without this
 app.use(express.json());
