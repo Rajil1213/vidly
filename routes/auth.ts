@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import config from 'config';
 import express, { Request, Response } from 'express';
 import Joi from 'joi';
 import jwt from 'jsonwebtoken';
@@ -37,8 +38,7 @@ router.post('/', async (req: Request, res: Response) => {
     
     try{
         if (validPassword) {
-            // TODO: get private key from environment
-            const token = jwt.sign({ _id: user._id }, 'jwtPrivateKey');
+            const token = jwt.sign({ _id: user._id }, config.get('jwtPrivateKey'));
             res.send(token);
         }
         else {
