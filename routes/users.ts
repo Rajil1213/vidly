@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
+import config from 'config';
 import express, { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 import _ from 'lodash';
 
 import { User, validateBody } from '../models/user';
@@ -26,9 +28,10 @@ router.post('/register', async (req: Request, res: Response) => {
         user.password = await bcrypt.hash(user.password, salt);
     }
 
-    try{
+    try {
         await user.save();
-        res.send(_.pick(user, ['_id', 'name', 'email']));
+        const token = jwt.sign({ _id: user._id }, config.get('jwtPrivateKey'));
+        res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
     }
     catch (err: any) {
         res.send(err.message);
