@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import express, { Request, Response } from 'express';
 import _ from 'lodash';
 
@@ -18,6 +19,12 @@ router.post('/register', async (req: Request, res: Response) => {
     if (user) return res.status(400).send("User is already registered.");
 
     user = new User(_.pick(req.body, ["name", "email", "password"]))
+
+    const salt = await bcrypt.genSalt(10);
+    // if user.password is not undefined
+    if (user.password) {
+        user.password = await bcrypt.hash(user.password, salt);
+    }
 
     try{
         await user.save();
