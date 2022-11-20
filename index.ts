@@ -7,6 +7,7 @@ import { default as rentals } from './routes/rentals';
 import { default as register } from './routes/users';
 import { default as auth } from './routes/auth';
 import mongoose from 'mongoose';
+import { error } from './middleware/error';
 
 const app: express.Application = express();
 
@@ -25,6 +26,9 @@ app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
 app.use('/api/users', register);
 app.use('/api/auth', auth);
+
+// add error middleware
+app.use(error);
 
 // setup db: use vidly
 // for single-replicaSet, set `directConnection=true` to
