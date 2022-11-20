@@ -1,6 +1,9 @@
+import config from 'config';
 import Joi from 'joi';
+import jwt from 'jsonwebtoken';
 import mongoose from "mongoose";
 import passwordComplexity from 'joi-password-complexity';
+
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -17,6 +20,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         min: 8,
         max: 1024 // because password 
+    }
+},
+{
+    methods: {
+        generateAuthToken(this) {
+            const token = jwt.sign({ _id: this._id }, config.get('jwtPrivateKey'));
+            return token;
+        }
     }
 })
 
