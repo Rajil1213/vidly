@@ -1,12 +1,16 @@
 import bcrypt from 'bcrypt';
-import config from 'config';
 import express, { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
 import _ from 'lodash';
+import { auth } from '../middleware/auth';
 
 import { User, validateBody } from '../models/user';
 
 const router: express.Router = express.Router();
+
+router.get('/me', auth, async (req: Request, res: Response) => {
+    const user = await User.findById(req.user._id).select("-password"); // get user but exclude pw
+    res.send(user);
+})
 
 router.post('/register', async (req: Request, res: Response) => {
     const { error } = validateBody(req.body);
