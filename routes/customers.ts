@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { auth } from '../middleware/auth';
 
 import { Customer, validateBody } from '../models/customer';
 
@@ -15,7 +16,7 @@ router.get('/:id', async (req: Request, res: Response) => {
     return res.send(customer);
 })
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', auth, async (req: Request, res: Response) => {
     const { error } = validateBody(req.body);
 
     if (error) {
@@ -41,7 +42,7 @@ router.post('/', async (req: Request, res: Response) => {
     }
 })
 
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/:id', auth, async (req: Request, res: Response) => {
     // if JSON body is invalid
     const { error } = validateBody(req.body);
     if (error) {
@@ -58,7 +59,7 @@ router.put('/:id', async (req: Request, res: Response) => {
     res.send(result);
 })
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', auth, async (req: Request, res: Response) => {
     const result = await Customer.findByIdAndDelete(req.params.id);
     if (!result) return res.status(400).send(`${req.params.id} is an invalid id`)
 

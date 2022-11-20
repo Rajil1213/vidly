@@ -4,6 +4,7 @@ import mongoose, { ClientSession } from 'mongoose';
 import { Rental, validateBody } from '../models/rental';
 import { Customer } from '../models/customer';
 import { Movie } from '../models/movie';
+import { auth } from '../middleware/auth';
 
 const router: express.Router = express.Router();
 
@@ -12,7 +13,7 @@ router.get('/', async (req: Request, res: Response) => {
     return res.send(rentals);
 })
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', auth, async (req: Request, res: Response) => {
     const { error } = validateBody(req.body);
 
     if (error) {

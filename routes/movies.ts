@@ -3,6 +3,7 @@ import mongoose, { mongo } from 'mongoose';
 
 import { Movie, validateBody } from '../models/movie';
 import { Genre } from '../models/genre';
+import { auth } from '../middleware/auth';
 
 const router: express.Router = express.Router();
 
@@ -17,7 +18,7 @@ router.get('/:id', async (req: Request, res: Response) => {
     return res.send(genre);
 })
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', auth, async (req: Request, res: Response) => {
     const { error } = validateBody(req.body);
 
     if (error) {
@@ -51,7 +52,7 @@ router.post('/', async (req: Request, res: Response) => {
     }
 })
 
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/:id', auth, async (req: Request, res: Response) => {
     // if JSON body is invalid
     const { error } = validateBody(req.body);
     if (error) {
@@ -74,7 +75,7 @@ router.put('/:id', async (req: Request, res: Response) => {
     res.send(result);
 })
 
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', auth, async (req: Request, res: Response) => {
     const result = await Movie.findByIdAndDelete(req.params.id);
     if (!result) return res.status(400).send(`${req.params.id} is an invalid id`)
 
