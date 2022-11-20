@@ -9,8 +9,13 @@ const router: express.Router = express.Router();
 ///// TODO: sample list of genres, to be replaced with call to DB later...
 
 router.get('/', async (req: Request, res: Response) => {
-    const genres = await Genre.find().select({name: 1}).sort({name: 1});
-    return res.send(genres);
+    try {
+        const genres = await Genre.find().select({name: 1}).sort({name: 1});
+        return res.send(genres);
+    }
+    catch (ex: any) {
+        return res.status(500).send("Something went wrong.")
+    }
 })
 
 router.get('/:id', async (req: Request, res: Response) => {
