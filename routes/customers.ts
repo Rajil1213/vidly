@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { admin } from '../middleware/admin';
 import { auth } from '../middleware/auth';
 
 import { Customer, validateBody } from '../models/customer';
@@ -59,7 +60,7 @@ router.put('/:id', auth, async (req: Request, res: Response) => {
     res.send(result);
 })
 
-router.delete('/:id', auth, async (req: Request, res: Response) => {
+router.delete('/:id', [auth, admin], async (req: Request, res: Response) => {
     const result = await Customer.findByIdAndDelete(req.params.id);
     if (!result) return res.status(400).send(`${req.params.id} is an invalid id`)
 
