@@ -38,7 +38,7 @@ router.post('/', async (req: Request, res: Response) => {
     
     try{
         if (validPassword) {
-            const token = jwt.sign({ _id: user._id }, config.get('jwtPrivateKey'));
+            const token = user.generateAuthToken();
             res.send(token);
         }
         else {
