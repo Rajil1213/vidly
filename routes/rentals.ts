@@ -5,14 +5,13 @@ import { Rental, validateBody } from '../models/rental';
 import { Customer } from '../models/customer';
 import { Movie } from '../models/movie';
 import { auth } from '../middleware/auth';
-import { asyncMiddleware } from '../middleware/async';
 
 const router: express.Router = express.Router();
 
-router.get('/', asyncMiddleware(async (req: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response) => {
     const rentals = await Rental.find().sort({dateOut: -1});
     return res.send(rentals);
-}))
+})
 
 router.post('/', auth, async (req: Request, res: Response) => {
     const { error } = validateBody(req.body);

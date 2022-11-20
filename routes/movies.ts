@@ -5,20 +5,19 @@ import { Movie, validateBody } from '../models/movie';
 import { Genre } from '../models/genre';
 import { auth } from '../middleware/auth';
 import { admin } from '../middleware/admin';
-import { asyncMiddleware } from '../middleware/async';
 
 const router: express.Router = express.Router();
 
-router.get('/', asyncMiddleware(async (req: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response) => {
     const genres = await Movie.find().populate('genre').select({title: 1, genre: 1, numberInStock: 1, dailyRentalRate: 1}).sort({title: 1});
     return res.send(genres);
-}))
+})
 
-router.get('/:id', asyncMiddleware(async (req: Request, res: Response) => {
+router.get('/:id', async (req: Request, res: Response) => {
     const genre = await Movie.findOne({_id: req.params.id}).populate('genre').select({title: 1, genre: 1, numberInStock: 1, dailyRentalRate: 1});
     if (!genre) return res.status(400).send(`${req.params.id} is an invalid id`)
     return res.send(genre);
-}))
+})
 
 router.post('/', auth, async (req: Request, res: Response) => {
     const { error } = validateBody(req.body);
@@ -54,7 +53,7 @@ router.post('/', auth, async (req: Request, res: Response) => {
     }
 })
 
-router.put('/:id', auth, asyncMiddleware(async (req: Request, res: Response) => {
+router.put('/:id', auth, async (req: Request, res: Response) => {
     // if JSON body is invalid
     const { error } = validateBody(req.body);
     if (error) {
@@ -75,13 +74,13 @@ router.put('/:id', auth, asyncMiddleware(async (req: Request, res: Response) => 
     }, {new: true})
     if (!result) return res.status(400).send(`${req.params.id} is an invalid id`)
     res.send(result);
-}))
+})
 
-router.delete('/:id', [auth, admin], asyncMiddleware(async (req: Request, res: Response) => {
+router.delete('/:id', [auth, admin], async (req: Request, res: Response) => {
     const result = await Movie.findByIdAndDelete(req.params.id);
     if (!result) return res.status(400).send(`${req.params.id} is an invalid id`)
 
     res.send(result);
-}))
+})
 
 export default router;
