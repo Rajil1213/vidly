@@ -9,6 +9,7 @@ import { default as register } from './routes/users';
 import { default as auth } from './routes/auth';
 import mongoose from 'mongoose';
 import { errorHandler } from './middleware/error';
+import { logger } from './util/logger';
 
 const app: express.Application = express();
 
@@ -16,6 +17,11 @@ if (!config.get('jwtPrivateKey')) {
     console.error("FATAL ERROR: jwtPrivateKey is not defined.");
     process.exit(1);
 }
+
+process.on('uncaughtException', (ex: any) => {
+    console.log("Oops! Encountered an uncaught exception")
+    logger.error(ex.message);
+})
 
 // get POST body (middleware); req.body = undefined without this
 app.use(express.json());
