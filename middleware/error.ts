@@ -1,6 +1,8 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import { logger } from '../util/logger';
 
-export const error = (err: any, req: Request, res: Response) => {
-    // TODO: log `err`
+export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+    // // TODO: log `err`
+    logger.error(err.message, err)
     return res.status(500).send("Something went wrong.")
 }
