@@ -1,28 +1,15 @@
-import config from 'config';
 import express from 'express';
 import 'express-async-errors';
-import { logger } from './util/logger';
 
 const app: express.Application = express();
+
+// setup startup error logging
+import logging from './startup/logging';
+logging();
 
 // setup routes
 import routes from './startup/routes'
 routes(app);
-
-if (!config.get('jwtPrivateKey')) {
-    console.error("FATAL ERROR: jwtPrivateKey is not defined.");
-    process.exit(1);
-}
-
-process.on('uncaughtException', (ex: any) => {
-    logger.error(ex.message);
-    process.exit(1);
-})
-
-process.on('unhandledRejection', (ex: any) => {
-    logger.error(ex.message);
-    process.exit(1);
-})
 
 // setup database
 import database from './startup/database';
