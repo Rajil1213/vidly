@@ -1,4 +1,5 @@
 import { createLogger, format, transports } from 'winston';
+import 'winston-mongodb'
 
 const { combine, splat, timestamp, printf } = format;
 
@@ -21,6 +22,12 @@ export const logger = createLogger({
     ),
     transports: [
         new transports.Console({ level: 'info' }),
-        new transports.File({ filename: "vidly.log", level: 'debug'})
+        new transports.File({ filename: "vidly.log", level: 'debug'}),
+        new transports.MongoDB({
+            db: 'mongodb://localhost:27017/vidly?directConnection=true', // in prod, use a separate database for logs
+            options: {
+                useUnifiedTopology: true,
+            }
+        })    
     ]
 })
