@@ -11,6 +11,7 @@ const router: express.Router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
     const genres = await Genre.find().select({name: 1}).sort({name: 1});
+    // throw new Error("random error oops")
     return res.send(genres);
 })
 
