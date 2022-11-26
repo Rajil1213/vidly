@@ -1,5 +1,6 @@
 import config from 'config';
 import express, {  Request, Response } from 'express';
+import 'express-async-errors';
 import { default as genres } from './routes/genres';
 import { default as customers } from './routes/customers';
 import { default as movies } from './routes/movies';
@@ -7,7 +8,7 @@ import { default as rentals } from './routes/rentals';
 import { default as register } from './routes/users';
 import { default as auth } from './routes/auth';
 import mongoose from 'mongoose';
-import { error } from './middleware/error';
+import { errorHandler } from './middleware/error';
 
 const app: express.Application = express();
 
@@ -28,7 +29,7 @@ app.use('/api/users', register);
 app.use('/api/auth', auth);
 
 // add error middleware
-app.use(error);
+app.use(errorHandler);
 
 // setup db: use vidly
 // for single-replicaSet, set `directConnection=true` to
