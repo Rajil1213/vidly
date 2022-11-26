@@ -7,8 +7,12 @@ const app: express.Application = express();
 import logging from './startup/logging';
 logging();
 
+// setup configuration
+import configure from './startup/config';
+configure();
+
 // setup routes
-import routes from './startup/routes'
+import routes from './startup/routes';
 routes(app);
 
 // setup database
