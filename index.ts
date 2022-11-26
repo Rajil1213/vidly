@@ -1,5 +1,6 @@
 import express from 'express';
 import 'express-async-errors';
+import { logger } from './util/logger';
 
 const app: express.Application = express();
 
@@ -21,6 +22,6 @@ database('mongodb://localhost:27017/vidly?directConnection=true')
 
 const PORT = Number(process.env.PORT).valueOf() || 3000;
 app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`)
+    logger.info(`Server listening on port ${PORT}`)
 })
 
