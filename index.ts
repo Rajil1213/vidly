@@ -19,8 +19,13 @@ if (!config.get('jwtPrivateKey')) {
 }
 
 process.on('uncaughtException', (ex: any) => {
-    console.log("Oops! Encountered an uncaught exception")
     logger.error(ex.message);
+    process.exit(1);
+})
+
+process.on('unhandledRejection', (ex: any) => {
+    logger.error(ex.message);
+    process.exit(1);
 })
 
 // get POST body (middleware); req.body = undefined without this
