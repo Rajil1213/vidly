@@ -85,7 +85,10 @@ describe('/api/returns', () => {
     })
 
     it('should return 300 if rental is aleady processed', async () => {
-        const rental = await Rental.findOne(body)
+        const rental = await Rental.findOne({
+            "customer._id": customerId,
+            "movie._id": movieId
+        })
         if (rental) {
             rental.dateReturned = new Date(Date.now().toString());
             const res = await exec();
