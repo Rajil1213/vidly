@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import moment from 'moment';
 import mongoose from "mongoose";
 
 // for ObjectID validation
@@ -65,12 +66,11 @@ const rentalSchema = new mongoose.Schema({
 },
 {
     methods: {
-        calculateRentalFee(this) {
+        setRentalFee(this) {
             if (this.dateReturned) {
-                this.rentalFee = 
-                    (this.dateReturned.getSeconds() - this.dateOut.getSeconds())
-                    * this.movie.dailyRentalRate
-                    / 86400; 
+                let dateOut = moment(this.dateOut);
+                let dateReturned = moment(this.dateReturned);
+                this.rentalFee = dateReturned.diff(dateOut, "days") * this.movie.dailyRentalRate;
             }
         }
     }
