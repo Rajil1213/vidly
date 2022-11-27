@@ -6,9 +6,13 @@ import { User } from '../../models/user';
 describe('/api/returns', () => {
     let server: any;
     let rental: any;
+    let customerId: any;
+    let movieId: any;
     beforeEach(async () => {
         const mod = await import('../../index')
         server = (mod as any).default;
+        customerId = new mongoose.Types.ObjectId();
+        movieId = new mongoose.Types.ObjectId();
         rental = new Rental({
             customer: {
                 _id: customerId, 
@@ -32,10 +36,8 @@ describe('/api/returns', () => {
     });
 
     // Happy path
-    let token: string;
-    let customerId: mongoose.Types.ObjectId;
-    let movieId: mongoose.Types.ObjectId;
     let body: any;
+    let token: string;
     const exec = () => {
         return request(server)
             .post('/api/returns')
@@ -44,8 +46,6 @@ describe('/api/returns', () => {
     }
 
     beforeEach(() => {
-        customerId = new mongoose.Types.ObjectId();
-        movieId = new mongoose.Types.ObjectId();
         token = new User().generateAuthToken();
         body = {
             customerId,
@@ -90,9 +90,15 @@ describe('/api/returns', () => {
             "movie._id": movieId
         })
         if (rental) {
-            rental.dateReturned = new Date(Date.now().toString());
+            rental.dateReturned = new Date(Date.now());
+            await rental.save();
             const res = await exec();
             expect(res.status).toBe(300);
         }
+    })
+
+    it('should return 200 if the request is valid', async () => {
+        const res = await exec();
+        expect(res.status).toBe(200);
     })
 })
