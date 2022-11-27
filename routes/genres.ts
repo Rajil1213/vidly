@@ -4,6 +4,7 @@ import { Genre, validateBody } from '../models/genre';
 import { auth } from '../middleware/auth';
 import { admin } from '../middleware/admin';
 import { validateObjectId } from '../middleware/validateObjectId';
+import { validateReq } from '../middleware/validateReq';
 
 const router: express.Router = express.Router();
 
@@ -21,13 +22,7 @@ router.get('/:id', validateObjectId, async (req: Request, res: Response) => {
     return res.send(genre);
 });
 
-router.post('/', auth, async (req: Request, res: Response) => {
-    const { error } = validateBody(req.body);
-
-    if (error) {
-        return res.status(400).send(error.details[0].message);
-    }
-
+router.post('/', [auth, validateReq(validateBody)], async (req: Request, res: Response) => {
     const name = req.body.name
     const genre = new Genre({
         name: name
@@ -43,13 +38,7 @@ router.post('/', auth, async (req: Request, res: Response) => {
     }
 })
 
-router.put('/:id', auth, async (req: Request, res: Response) => {
-    // if JSON body is invalid
-    const { error } = validateBody(req.body);
-    if (error) {
-        return res.status(400).send(error.details[0].message);
-    }
-
+router.put('/:id', [auth, validateReq(validateBody)], async (req: Request, res: Response) => {
     const name = req.body.name;
     const result = await Genre.findByIdAndUpdate(req.params.id, {
         $set: { name: name}
