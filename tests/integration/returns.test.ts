@@ -74,4 +74,13 @@ describe('/api/returns', () => {
         const res = await exec();
         expect(res.status).toBe(400);
     })
+
+    it('should return 404 if no rental found for the given customer/movie', async () => {
+        body = {
+            customerId: movieId,
+            movieId: customerId
+        }
+        const res = await exec();
+        expect(res.status).toBe(404);
+    })
 })
