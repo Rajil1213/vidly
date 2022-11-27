@@ -66,4 +66,12 @@ describe('/api/returns', () => {
         const res = await exec();
         expect(res.status).toBe(400);
     })
+
+    it('should return 400 if movieId is not provided', async () => {
+        body = {
+            customerId
+        }
+        const res = await exec();
+        expect(res.status).toBe(400);
+    })
 })
