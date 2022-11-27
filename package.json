@@ -17,7 +17,7 @@
     "build": "npx tsc",
     "start": "node dist/index.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll --verbose"
   },
   "repository": {
     "type": "git",
