@@ -21,7 +21,9 @@ import database from './startup/database';
 database();
 
 const PORT = Number(process.env.PORT).valueOf() || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     logger.info(`Server listening on port ${PORT}`)
 })
+
+export default server;
 
