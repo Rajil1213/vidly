@@ -11,7 +11,7 @@ describe('/api/genres', () => {
     });
     afterEach(async () => {
         if (server) {
-            server.close();
+            await server.close();
         }
         // Cleanup
         await Genre.deleteMany({});

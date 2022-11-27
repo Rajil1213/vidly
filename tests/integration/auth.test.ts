@@ -10,7 +10,7 @@ describe('auth middleware', () => {
     });
     afterEach(async () => {
         if (server) {
-            server.close();
+            await server.close();
         }
         // Cleanup for valid POST request
         await Genre.deleteMany({});
