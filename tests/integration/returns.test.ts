@@ -1,17 +1,20 @@
 import mongoose from 'mongoose';
 import { Rental } from '../../models/rental';
 import request from 'supertest';
+import { User } from '../../models/user';
 
 describe('/api/returns', () => {
     let server: any;
     let customerId: mongoose.Types.ObjectId;
     let movieId: mongoose.Types.ObjectId;
     let rental: any;
+    let token: string;
     beforeEach(async () => {
         const mod = await import('../../index')
         server = (mod as any).default;
         customerId = new mongoose.Types.ObjectId();
         movieId = new mongoose.Types.ObjectId();
+        token = new User().generateAuthToken();
         rental = new Rental({
             customer: {
                 _id: customerId, 
@@ -47,6 +50,7 @@ describe('/api/returns', () => {
     it('should return 400 if customerId is not provided', async () => {
         const res = await request(server)
             .post('/api/returns')
+            .set('x-auth-token', token)
             .send({
                 movieId
             })
