@@ -12,6 +12,14 @@ const router: express.Router = express.Router();
 router.post('/', [auth], async (req: Request, res: Response) => {
     const { error } = validateBody(req.body)
     if (error) return res.status(400).send(error.details[0].message)
+
+    const { customerId, movieId } = req.body;
+    const rental = await Rental.find({
+        "customer._id": customerId,
+        "movie._id": movieId
+    })
+
+    if (rental.length == 0) return res.status(404).send("Rental not found")
 })
 
 
