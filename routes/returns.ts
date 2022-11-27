@@ -23,6 +23,9 @@ router.post('/', [auth], async (req: Request, res: Response) => {
 
     if (rental.dateReturned) return res.status(300).send("Already returned")
 
+    rental.dateReturned = new Date(Date.now());
+    await rental.save();
+
     return res.status(200).send("OK")
 })
 
