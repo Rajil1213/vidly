@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import { Rental } from '../../models/rental';
 import request from 'supertest';
 import { User } from '../../models/user';
+import { Movie } from '../../models/movie';
+import moment from 'moment';
 
 describe('/api/returns', () => {
     let server: any;
@@ -112,17 +114,56 @@ describe('/api/returns', () => {
     })
 
     it('should calculate the rental fee if the request is valid', async () => {
-        await exec();
         const rental = await Rental.findOne({
             "customer._id": customerId,
             "movie._id": movieId
         })
-        let dateOut = rental?.dateOut.getSeconds();
-        let dateReturned = rental?.dateReturned?.getSeconds();
-        let rentalFee: number = 0;
-        if (dateOut && dateReturned && rental?.movie.dailyRentalRate) {
-            rentalFee = (dateReturned - dateOut) * rental?.movie.dailyRentalRate / 86400;
+        if (rental) {
+            // set dateOut to some days ago so that the rental is used for a few days
+            rental.dateOut = moment().add(-7, "days").toDate();
+            await rental.save();
+
+            await exec();
+
+            const changedRental = await Rental.findById(rental._id);
+
+            if (changedRental) {
+                let dateOut = moment(changedRental.dateOut)
+                let dateReturned = moment(changedRental.dateReturned);
+                let rentalFee: number = 0;
+
+                if (dateOut && dateReturned && changedRental?.movie.dailyRentalRate) {
+                    rentalFee = dateReturned.diff(dateOut, "days") * changedRental?.movie.dailyRentalRate;
+                }
+                expect(changedRental.rentalFee).toBeCloseTo(rentalFee);
+            }
         }
-        expect(rental?.rentalFee).toBeCloseTo(rentalFee);
+    })
+
+    it('should increase the stock if the request is valid', async () => {
+        const rental = await Rental.findOne({
+            "customer._id": customerId,
+            "movie._id": movieId
+        })
+        const ogQty: number = 5
+        const movieBeforeUpdate = await Movie.create({
+            _id: movieId,
+            title: "movieTitle",
+            numberInStock: ogQty,
+            dailyRentalRate: rental?.movie.dailyRentalRate,
+            genre: {
+                name: "genreName"
+            }
+        })
+        await exec();
+        const movieAfterUpdate = await Movie.findById(movieId)
+        expect(movieAfterUpdate?.numberInStock).toBe(ogQty + 1);
+    })
+
+    it('should return the rental if the request is valid', async () => {
+        const res = await exec();
+        expect(Object.keys(res.body)).toEqual(
+            expect.arrayContaining(["dateOut", "dateReturned", "customer", "movie", "_id"])
+        )
     })
 })
