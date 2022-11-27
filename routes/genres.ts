@@ -3,7 +3,8 @@ import express, { NextFunction, Request, Response } from 'express';
 import { Genre, validateBody } from '../models/genre';
 import { auth } from '../middleware/auth';
 import { admin } from '../middleware/admin';
-import { asyncMiddleware } from '../middleware/async';
+import mongoose from 'mongoose';
+import { validateObjectId } from '../middleware/validateObjectId';
 
 const router: express.Router = express.Router();
 
@@ -15,9 +16,9 @@ router.get('/', async (req: Request, res: Response) => {
     return res.send(genres);
 })
 
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', validateObjectId, async (req: Request, res: Response) => {
     const genre = await Genre.findOne({_id: req.params.id}).select({name: 1});
-    if (!genre) return res.status(400).send(`${req.params.id} is an invalid id`)
+    if (!genre) return res.status(404).send(`${req.params.id} not found`)
     return res.send(genre);
 });
 
