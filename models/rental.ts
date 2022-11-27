@@ -62,7 +62,20 @@ const rentalSchema = new mongoose.Schema({
         type: Number,
         min: 0
     }
+},
+{
+    methods: {
+        calculateRentalFee(this) {
+            if (this.dateReturned) {
+                this.rentalFee = 
+                    (this.dateReturned.getSeconds() - this.dateOut.getSeconds())
+                    * this.movie.dailyRentalRate
+                    / 86400; 
+            }
+        }
+    }
 })
+
 
 export const validateBody = (body: {}): Joi.ValidationResult => {
     const schema: Joi.ObjectSchema = Joi.object({
