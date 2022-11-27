@@ -53,6 +53,7 @@
   "dependencies": {
     "@types/joi-password-complexity": "^4.2.2",
     "@types/lodash": "^4.14.188",
+    "@types/moment": "^2.13.0",
     "@types/mongoose": "^5.11.97",
     "bcrypt": "^5.1.0",
     "config": "^3.3.8",
@@ -61,6 +62,7 @@
     "joi": "^17.6.4",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
+    "moment": "^2.29.4",
     "mongoose": "^6.7.1",
     "ts-joi-objectid": "^1.0.1",
     "winston": "^3.8.2",
