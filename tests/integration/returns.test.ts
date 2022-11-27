@@ -87,10 +87,7 @@ describe('/api/returns', () => {
     })
 
     it('should return 300 if rental is aleady processed', async () => {
-        const rental = await Rental.findOne({
-            "customer._id": customerId,
-            "movie._id": movieId
-        })
+        const rental = await Rental.lookup(customerId, movieId)
         if (rental) {
             rental.dateReturned = new Date(Date.now());
             await rental.save();
@@ -106,18 +103,12 @@ describe('/api/returns', () => {
 
     it('should set the return date if request is valid', async () => {
         await exec();
-        const rental = await Rental.findOne({
-            "customer._id": customerId,
-            "movie._id": movieId
-        })
+        const rental = await Rental.lookup(customerId, movieId)
         expect(rental?.dateReturned).toBeDefined();
     })
 
     it('should calculate the rental fee if the request is valid', async () => {
-        const rental = await Rental.findOne({
-            "customer._id": customerId,
-            "movie._id": movieId
-        })
+        const rental = await Rental.lookup(customerId, movieId)
         if (rental) {
             // set dateOut to some days ago so that the rental is used for a few days
             rental.dateOut = moment().add(-7, "days").toDate();
@@ -141,12 +132,9 @@ describe('/api/returns', () => {
     })
 
     it('should increase the stock if the request is valid', async () => {
-        const rental = await Rental.findOne({
-            "customer._id": customerId,
-            "movie._id": movieId
-        })
+        const rental = await Rental.lookup(customerId, movieId)
         const ogQty: number = 5
-        const movieBeforeUpdate = await Movie.create({
+        await Movie.create({
             _id: movieId,
             title: "movieTitle",
             numberInStock: ogQty,
