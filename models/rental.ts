@@ -73,9 +73,15 @@ const rentalSchema = new mongoose.Schema({
                 this.rentalFee = dateReturned.diff(dateOut, "days") * this.movie.dailyRentalRate;
             }
         }
-    }
+    },
+    statics: {
+        lookup(customerId: mongoose.Types.ObjectId, movieId: mongoose.Types.ObjectId) {
+            return this.findOne({
+                'customer._id': customerId,
+                'movie._id': movieId
+            }) 
+    }}
 })
-
 
 export const validateBody = (body: {}): Joi.ValidationResult => {
     const schema: Joi.ObjectSchema = Joi.object({
