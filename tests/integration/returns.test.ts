@@ -110,4 +110,19 @@ describe('/api/returns', () => {
         })
         expect(rental?.dateReturned).toBeDefined();
     })
+
+    it('should calculate the rental fee if the request is valid', async () => {
+        await exec();
+        const rental = await Rental.findOne({
+            "customer._id": customerId,
+            "movie._id": movieId
+        })
+        let dateOut = rental?.dateOut.getSeconds();
+        let dateReturned = rental?.dateReturned?.getSeconds();
+        let rentalFee: number = 0;
+        if (dateOut && dateReturned && rental?.movie.dailyRentalRate) {
+            rentalFee = (dateReturned - dateOut) * rental?.movie.dailyRentalRate / 86400;
+        }
+        expect(rental?.rentalFee).toBeCloseTo(rentalFee);
+    })
 })
