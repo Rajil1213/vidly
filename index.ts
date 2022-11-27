@@ -18,7 +18,7 @@ routes(app);
 
 // setup database
 import database from './startup/database';
-database('mongodb://localhost:27017/vidly?directConnection=true')
+database();
 
 const PORT = Number(process.env.PORT).valueOf() || 3000;
 app.listen(PORT, () => {
