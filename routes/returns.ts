@@ -22,6 +22,8 @@ router.post('/', [auth], async (req: Request, res: Response) => {
     if (!rental) return res.status(404).send("Rental not found")
 
     if (rental.dateReturned) return res.status(300).send("Already returned")
+
+    return res.status(200).send("OK")
 })
 
 
