@@ -47,13 +47,13 @@ describe('/api/returns', () => {
         customerId = new mongoose.Types.ObjectId();
         movieId = new mongoose.Types.ObjectId();
         token = new User().generateAuthToken();
-    })
-
-    it('should return 401 if the client is not logged in', async () => {
         body = {
             customerId,
             movieId
         }
+    })
+
+    it('should return 401 if the client is not logged in', async () => {
         token = ""
         const res = await exec();
         expect(res.status).toBe(401);
@@ -82,5 +82,14 @@ describe('/api/returns', () => {
         }
         const res = await exec();
         expect(res.status).toBe(404);
+    })
+
+    it('should return 300 if rental is aleady processed', async () => {
+        const rental = await Rental.findOne(body)
+        if (rental) {
+            rental.dateReturned = new Date(Date.now().toString());
+            const res = await exec();
+            expect(res.status).toBe(300);
+        }
     })
 })
