@@ -3,7 +3,6 @@ import express, { NextFunction, Request, Response } from 'express';
 import { Genre, validateBody } from '../models/genre';
 import { auth } from '../middleware/auth';
 import { admin } from '../middleware/admin';
-import mongoose from 'mongoose';
 import { validateObjectId } from '../middleware/validateObjectId';
 
 const router: express.Router = express.Router();
