@@ -67,11 +67,11 @@ const rentalSchema = new mongoose.Schema({
 {
     methods: {
         setRentalFee(this) {
-            if (this.dateReturned) {
-                let dateOut = moment(this.dateOut);
-                let dateReturned = moment(this.dateReturned);
-                this.rentalFee = dateReturned.diff(dateOut, "days") * this.movie.dailyRentalRate;
-            }
+            // Use current date if date not defined while calling setRentalFee
+            let dateReturned = this.dateReturned? moment(this.dateReturned): moment();
+            let dateOut = moment(this.dateOut);
+
+            this.rentalFee = dateReturned.diff(dateOut, "days") * this.movie.dailyRentalRate;
         }
     },
     statics: {
