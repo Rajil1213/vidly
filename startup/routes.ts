@@ -6,6 +6,7 @@ import { default as movies } from '../routes/movies';
 import { default as rentals } from '../routes/rentals';
 import { default as register } from '../routes/users';
 import { default as auth } from '../routes/auth';
+import { default as returns } from '../routes/returns';
 
 // for all routes starting with `/api/genres` use `genres` (router) as the handler
 const routes = (app: Application) => {
@@ -19,6 +20,7 @@ const routes = (app: Application) => {
     app.use('/api/rentals', rentals);
     app.use('/api/users', register);
     app.use('/api/auth', auth);
+    app.use('/api/returns', returns)
 
     // add error middleware
     app.use(errorHandler);
