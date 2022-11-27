@@ -101,4 +101,13 @@ describe('/api/returns', () => {
         const res = await exec();
         expect(res.status).toBe(200);
     })
+
+    it('should set the return date if request is valid', async () => {
+        await exec();
+        const rental = await Rental.findOne({
+            "customer._id": customerId,
+            "movie._id": movieId
+        })
+        expect(rental?.dateReturned).toBeDefined();
+    })
 })
