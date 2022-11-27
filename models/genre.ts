@@ -11,7 +11,7 @@ const genreSchema = new mongoose.Schema({
 
 export const validateBody = (body: {}): Joi.ValidationResult => {
     const schema: Joi.ObjectSchema = Joi.object({
-        name: Joi.string().min(3).required()
+        name: Joi.string().min(3).max(50).required()
     });
 
     return schema.validate(body);
