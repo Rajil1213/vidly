@@ -58,7 +58,7 @@ router.put('/:id', auth, async (req: Request, res: Response) => {
     res.send(result);
 })
 
-router.delete('/:id', [auth, admin], async (req: Request, res: Response) => {
+router.delete('/:id', [validateObjectId, auth, admin], async (req: Request, res: Response) => {
     const result = await Genre.findByIdAndDelete(req.params.id);
     if (!result) return res.status(400).send(`${req.params.id} is an invalid id`)
 
