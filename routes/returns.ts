@@ -4,6 +4,7 @@ import { auth } from '../middleware/auth';
 import { admin } from '../middleware/admin';
 import { validateObjectId } from '../middleware/validateObjectId';
 import { Rental, validateBody } from '../models/rental';
+import { Movie } from '../models/movie';
 
 const router: express.Router = express.Router();
 
@@ -25,9 +26,15 @@ router.post('/', [auth], async (req: Request, res: Response) => {
 
     rental.dateReturned = new Date(Date.now());
     rental.setRentalFee();
+
+    const movie = await Movie.findById(movieId);
+    if (movie) {
+        movie.numberInStock++;
+        movie.save()
+    }
     await rental.save();
 
-    return res.status(200).send("OK")
+    return res.status(200).send(rental);
 })
 
 
