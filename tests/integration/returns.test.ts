@@ -43,4 +43,13 @@ describe('/api/returns', () => {
             })
         expect(res.status).toBe(401);
     })
+
+    it('should return 400 if customerId is not provided', async () => {
+        const res = await request(server)
+            .post('/api/returns')
+            .send({
+                movieId
+            })
+        expect(res.status).toBe(400);
+    })
 })
