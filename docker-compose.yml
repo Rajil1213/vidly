@@ -4,6 +4,19 @@ services:
     image: mongo:6.0.2
     ports:
       - 27017:27017
-    network_mode: bridge
-    # spawn with replica set for Transactions
-    command: mongod --bind_ip_all --replSet rs0
+    command: mongod 
+  api: 
+    build:
+      context: .
+      args:
+        # set this commandline arg based on the env variable where the compose file is run
+        jwtPrivateKey: ${vidly_jwtPrivateKey}
+
+    image: vidly-api
+    ports:
+      - 3000:3000
+    depends_on: 
+      - db
+    environment:
+      - NODE_ENV=prod
+    command: npm run start
