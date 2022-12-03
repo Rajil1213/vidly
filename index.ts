@@ -20,6 +20,10 @@ routes(app);
 import database from './startup/database';
 database();
 
+// for security and compression in prod
+import prod from './startup/prod';
+prod(app);
+
 const PORT = Number(process.env.PORT).valueOf() || 3000;
 const server = app.listen(PORT, () => {
     logger.info(`Server listening on port ${PORT}`)
