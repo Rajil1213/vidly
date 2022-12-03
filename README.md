@@ -4,6 +4,7 @@ A simple API for managing movie rentals based on [NodeJS MasterClass](https://ww
 ## Caveats
 * All packages are updated as of Dec 2022 (while the course itself has not been updated since 2018).
 * The source code and notes are all based on TypeScript (while the course itself uses JavaScript).
+* Deployment is via Docker (while the course uses Heroku)
 
 ## Prerequisites
 * You should have docker installed (supporting compose file version 3.9 or above).
