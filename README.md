@@ -1,5 +1,5 @@
 # vidly
-A simple API for managing movie rentals based on [NodeJS MasterClass](https://www.udemy.com/course/nodejs-master-class/learn), a course taught on [Udemy][https://www.udemy.com] by [Mosh Hamedani](https://twitter.com/moshhamedani).
+A simple API for managing movie rentals based on [NodeJS MasterClass](https://www.udemy.com/course/nodejs-master-class/learn), a course taught on [Udemy](https://www.udemy.com/) by [Mosh Hamedani](https://twitter.com/moshhamedani).
 
 ## Caveats
 * All packages are updated as of Dec 2022 (while the course itself has not been updated since 2018).
